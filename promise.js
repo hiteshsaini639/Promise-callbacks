@@ -11,7 +11,7 @@ function getPosts(){
             output+=`<li>${post.title} Last Edited <span class='timer'>${Math.round((curDate.getTime()-post.createdAt.getTime())/1000)}</span> seconds ago</li>`;
         });
         document.body.innerHTML=output;
-        },0);
+        },1000);
 }
 
 function createPost(post){
@@ -26,37 +26,32 @@ function createPost(post){
             else{
                 reject('Error: Somthing went wrong')
             }
-        },1000)
+        },2000)
     });
 }
 
-createPost({title:'Post Three',body:'This is third post',createdAt:new Date()}).then(getPosts).catch(err => console.log(err));
-createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()}).then(getPosts).catch(err => console.log(err));
-
-function deleteAPostFromBack(getPosts){
-    setTimeout(()=>{
-        posts.pop();
-        getPosts();
-    },0);
-}
-
-function deletePosts(){
+function deletePost(){
     return new Promise((resolve,reject)=>{
         setTimeout(()=>{
         if(posts.length==0){
             reject('Error: Array is empty now')
         }
         else{
-            resolve(getPosts);
+            resolve();
+            posts.pop();
+            getPosts();
         }
         },1000);
     });
 }
 
-let startDeleting=setInterval(()=>{
-    deletePosts().then(deleteAPostFromBack).catch(err => {console.log(err);
-    clearInterval(startDeleting);});
-},1010);
+// Promise
+createPost({title:'Post Three',body:'This is third post',createdAt:new Date()}).then(getPosts).then(deletePost).then(deletePost).then(deletePost).then(deletePost).catch(err => {    console.log(err);
+    createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()}).then(getPosts).then(deletePost);
+});
 
-startDeleting();
 
+// let startDeleting=setInterval(()=>{
+//     deletePosts().then(deleteAPostFromBack).catch(err => {console.log(err);
+//     clearInterval(startDeleting);});
+// },1010);
