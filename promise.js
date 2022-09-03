@@ -37,7 +37,7 @@ function deletePost(){
             reject('Error: Array is empty now')
         }
         else{
-            resolve();
+            resolve(posts);
             posts.pop();
             getPosts();
         }
@@ -45,13 +45,33 @@ function deletePost(){
     });
 }
 
-// Promise
-createPost({title:'Post Three',body:'This is third post',createdAt:new Date()}).then(getPosts).then(deletePost).then(deletePost).then(deletePost).then(deletePost).catch(err => {    console.log(err);
-    createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()}).then(getPosts).then(deletePost);
-});
+// //Promise
+// createPost({title:'Post Three',body:'This is third post',createdAt:new Date()}).then(getPosts).then(deletePost).then(deletePost).then(deletePost).then(deletePost).catch(err => {    console.log(err);
+//     createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()}).then(getPosts).then(deletePost);
+// });
 
 
 // let startDeleting=setInterval(()=>{
 //     deletePosts().then(deleteAPostFromBack).catch(err => {console.log(err);
 //     clearInterval(startDeleting);});
 // },1010);
+
+
+// //Promise.all
+// const promise1 =Promise.resolve('Hello World');
+// const promise2 = 10;
+// const promise3=new Promise((resolve,reject) =>setTimeout(resolve,2000,'Goodbye')
+// );
+
+// Promise.all([promise1,promise2,promise3]).then(values=>console.log(values));
+
+const updateLastUserActivityTime=new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+        getPosts();
+        resolve(posts);
+    },1000);
+})
+
+const createPostPromise=createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()});
+
+Promise.all([updateLastUserActivityTime,createPostPromise]).then(obj=>{console.log(JSON.parse(JSON.stringify(obj[0]))); deletePost().then(posts=>console.log(posts))});
