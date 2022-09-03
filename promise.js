@@ -14,8 +14,26 @@ function getPosts(){
         },1000);
 }
 
-function createPost(post){
-    return new Promise((resolve, reject)=>{
+
+// function createPost(post){
+//     return new Promise((resolve, reject)=>{
+//         setTimeout(()=>{
+//             posts.push(post);
+
+//             const error =false;
+//             if(!error){
+//                 resolve();
+//             }
+//             else{
+//                 reject('Error: Somthing went wrong')
+//             }
+//         },2000)
+//     });
+// }
+
+// asycn await create Post
+const createPost=async (post)=>{
+    const createPromise=new Promise((resolve, reject)=>{
         setTimeout(()=>{
             posts.push(post);
 
@@ -24,14 +42,38 @@ function createPost(post){
                 resolve();
             }
             else{
-                reject('Error: Somthing went wrong')
+                reject('Error: Somthing went wrong');
             }
-        },2000)
+        },2000);
     });
-}
+    let res;
+    try{
+        res=await createPromise;
+    }
+    catch(e){
+        res=e;
+    }
+    return res;
+};
 
-function deletePost(){
-    return new Promise((resolve,reject)=>{
+// function deletePost(){
+//     return new Promise((resolve,reject)=>{
+//         setTimeout(()=>{
+//         if(posts.length==0){
+//             reject('Error: Array is empty now')
+//         }
+//         else{
+//             resolve(posts);
+//             posts.pop();
+//             getPosts();
+//         }
+//         },1000);
+//     });
+// }
+
+//async await delete post
+const deletePost= async()=>{
+    const deletePromise=new Promise((resolve,reject)=>{
         setTimeout(()=>{
         if(posts.length==0){
             reject('Error: Array is empty now')
@@ -43,12 +85,27 @@ function deletePost(){
         }
         },1000);
     });
+    let res;
+    try{
+        res=await deletePromise;
+    }
+    catch(e){
+        res=e;
+    }
+    return res;
 }
 
-// //Promise
+//Promise
 // createPost({title:'Post Three',body:'This is third post',createdAt:new Date()}).then(getPosts).then(deletePost).then(deletePost).then(deletePost).then(deletePost).catch(err => {    console.log(err);
 //     createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()}).then(getPosts).then(deletePost);
 // });
+
+// calling for async await
+createPost({title:'Post Three',body:'This is third post',createdAt:new Date()}).then(getPosts).then(deletePost).then(deletePost).then(deletePost).then(deletePost).then((err)=>{console.log(err);
+    createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()}).then(getPosts).then(deletePost);
+});
+
+
 
 
 // let startDeleting=setInterval(()=>{
@@ -65,13 +122,13 @@ function deletePost(){
 
 // Promise.all([promise1,promise2,promise3]).then(values=>console.log(values));
 
-const updateLastUserActivityTime=new Promise((resolve,reject)=>{
-    setTimeout(()=>{
-        getPosts();
-        resolve(posts);
-    },1000);
-})
+// const updateLastUserActivityTime=new Promise((resolve,reject)=>{
+//     setTimeout(()=>{
+//         getPosts();
+//         resolve(posts);
+//     },1000);
+// })
 
-const createPostPromise=createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()});
+// const createPostPromise=createPost({title:'Post Four',body:'This is Fourth post',createdAt:new Date()});
 
-Promise.all([updateLastUserActivityTime,createPostPromise]).then(obj=>{console.log(JSON.parse(JSON.stringify(obj[0]))); deletePost().then(posts=>console.log(posts))});
+// Promise.all([updateLastUserActivityTime,createPostPromise]).then(obj=>{console.log(JSON.parse(JSON.stringify(obj[0]))); deletePost().then(posts=>console.log(posts))});
